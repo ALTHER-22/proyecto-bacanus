@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Editar Episodio | Bacanus{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <h1>Editar Episodio</h1>
+    <form method="POST" class="ep-form">
+
+        <div class="form-group">
+            <label>Número de episodio</label>
+            <input type="number" name="numero" required value="{{ episodio['numero'] }}">
+        </div>
+
+        <div class="form-group">
+            <label>Título</label>
+            <input type="text" name="titulo" required value="{{ episodio['titulo'] }}">
+        </div>
+
+        <div class="form-group">
+            <label>Descripción</label>
+            <textarea name="descripcion" rows="3">{{ episodio['descripcion'] or '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>URL de YouTube (embed)</label>
+            <input type="text" name="url_youtube" value="{{ episodio['url_youtube'] or '' }}" placeholder="https://www.youtube.com/embed/XXXX">
+            <small>Ejemplo: https://www.youtube.com/embed/dQw4w9WgXcQ</small>
+        </div>
+
+        <div class="form-group">
+            <label>URL de video MP4 (directo)</label>
+            <input type="text" name="url_mp4" value="{{ episodio['url_mp4'] or '' }}" placeholder="https://tuservidor.com/video.mp4">
+        </div>
+
+        <div class="form-group">
+            <label>URL de miniatura (imagen)</label>
+            <input type="text" name="miniatura" value="{{ episodio['miniatura'] or '' }}" placeholder="https://imagen.com/miniatura.jpg">
+        </div>
+
+        <div class="form-group">
+            <label>Duración</label>
+            <input type="text" name="duracion" value="{{ episodio['duracion'] or '' }}" placeholder="Ej: 24:00">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-guardar">Guardar Cambios</button>
+            <a href="/admin" class="btn-cancelar">Cancelar</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

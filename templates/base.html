@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bacanus{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="nav-logo">BACANUS</a>
+        <div class="nav-links">
+            <a href="/">Inicio</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2026 Bacanus — Todos los derechos reservados</p>
+    </footer>
+
+</body>
+</html>

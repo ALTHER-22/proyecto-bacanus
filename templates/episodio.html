@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Ep. {{ episodio['numero'] }} - {{ episodio['titulo'] }} | Bacanus{% endblock %}
+
+{% block content %}
+
+<div class="player-page">
+
+    <!-- REPRODUCTOR -->
+    <div class="player-container">
+        {% if episodio['url_youtube'] %}
+        <!-- OPCIÓN A: YouTube embed -->
+        <iframe
+            src="{{ episodio['url_youtube'] }}"
+            frameborder="0"
+            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
+
+        {% elif episodio['url_mp4'] %}
+        <!-- OPCIÓN B: Archivo MP4 directo -->
+        <video controls>
+            <source src="{{ episodio['url_mp4'] }}" type="video/mp4">
+            Tu navegador no soporta video HTML5.
+        </video>
+
+        {% else %}
+        <div class="no-video">
+            <p>⚠️ No hay video disponible para este episodio todavía.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- INFO DEL EPISODIO -->
+    <div class="player-info">
+        <div class="player-meta">
+            <span class="player-tag">Episodio {{ episodio['numero'] }}</span>
+            {% if episodio['duracion'] %}<span class="player-duracion">⏱ {{ episodio['duracion'] }}</span>{% endif %}
+        </div>
+        <h1 class="player-titulo">{{ episodio['titulo'] }}</h1>
+        {% if episodio['descripcion'] %}
+        <p class="player-desc">{{ episodio['descripcion'] }}</p>
+        {% endif %}
+    </div>
+
+    <!-- LISTA DE EPISODIOS -->
+    <div class="sidebar">
+        <h3 class="sidebar-title">Todos los episodios</h3>
+        <div class="sidebar-list">
+            {% for ep in todos %}
+            <a href="/episodio/{{ ep['id'] }}" class="sidebar-item {% if ep['id'] == episodio['id'] %}active{% endif %}">
+                <span class="sidebar-num">{{ ep['numero'] }}</span>
+                <div class="sidebar-info">
+                    <span class="sidebar-ep-titulo">{{ ep['titulo'] }}</span>
+                    {% if ep['duracion'] %}<span class="sidebar-duracion">{{ ep['duracion'] }}</span>{% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

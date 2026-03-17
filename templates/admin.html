@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Admin | Bacanus{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="admin-header">
+        <h1>Panel de Administración</h1>
+        <a href="/admin/agregar" class="btn-agregar">+ Agregar Episodio</a>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Título</th>
+                <th>Duración</th>
+                <th>YouTube</th>
+                <th>MP4</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ep in episodios %}
+            <tr>
+                <td>{{ ep['numero'] }}</td>
+                <td>{{ ep['titulo'] }}</td>
+                <td>{{ ep['duracion'] or '-' }}</td>
+                <td>{{ '✅' if ep['url_youtube'] else '❌' }}</td>
+                <td>{{ '✅' if ep['url_mp4'] else '❌' }}</td>
+                <td>
+                    <a href="/episodio/{{ ep['id'] }}" class="btn-ver">Ver</a>
+                    <a href="/admin/editar/{{ ep['id'] }}" class="btn-ver">Editar</a>
+                    <a href="/admin/eliminar/{{ ep['id'] }}" class="btn-eliminar" onclick="return confirm('¿Eliminar episodio?')">Eliminar</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6">No hay episodios aún.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

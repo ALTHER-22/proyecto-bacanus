@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Agregar Episodio | Bacanus{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <h1>Agregar Episodio</h1>
+    <form method="POST" class="ep-form">
+
+        <div class="form-group">
+            <label>Número de episodio</label>
+            <input type="number" name="numero" required placeholder="Ej: 1">
+        </div>
+
+        <div class="form-group">
+            <label>Título</label>
+            <input type="text" name="titulo" required placeholder="Ej: El Comienzo">
+        </div>
+
+        <div class="form-group">
+            <label>Descripción</label>
+            <textarea name="descripcion" rows="3" placeholder="Resumen del episodio..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>URL de YouTube (embed)</label>
+            <input type="text" name="url_youtube" placeholder="https://www.youtube.com/embed/XXXX">
+            <small>Si el video está en YouTube, pega aquí el link embed. Ejemplo: https://www.youtube.com/embed/dQw4w9WgXcQ</small>
+        </div>
+
+        <div class="form-group">
+            <label>URL de video MP4 (directo)</label>
+            <input type="text" name="url_mp4" placeholder="https://tuservidor.com/video.mp4">
+            <small>Si tienes el video en un servidor, pega aquí la URL directa al archivo .mp4</small>
+        </div>
+
+        <div class="form-group">
+            <label>URL de miniatura (imagen)</label>
+            <input type="text" name="miniatura" placeholder="https://imagen.com/miniatura.jpg">
+        </div>
+
+        <div class="form-group">
+            <label>Duración</label>
+            <input type="text" name="duracion" placeholder="Ej: 24:00">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-guardar">Guardar Episodio</button>
+            <a href="/admin" class="btn-cancelar">Cancelar</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
