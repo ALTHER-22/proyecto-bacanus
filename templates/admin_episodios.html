@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Episodios - {{ serie['titulo'] }} | Admin{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-header">
+        <div><a href="/admin" style="color:var(--text-muted);font-size:0.85rem;">← Volver</a><h1>{{ serie['titulo'] }}</h1></div>
+        <a href="/admin/serie/{{ serie['id'] }}/agregar" class="btn-agregar">+ Agregar Episodio</a>
+    </div>
+    <table class="admin-table">
+        <thead><tr><th>#</th><th>Título</th><th>Duración</th><th>YouTube</th><th>Acciones</th></tr></thead>
+        <tbody>
+        {% for ep in episodios %}
+        <tr>
+            <td>{{ ep['numero'] }}</td><td>{{ ep['titulo'] }}</td>
+            <td>{{ ep['duracion'] or '-' }}</td><td>{{ '✅' if ep['url_youtube'] else '❌' }}</td>
+            <td>
+                <a href="/episodio/{{ ep['id'] }}" class="btn-ver">Ver</a>
+                <a href="/admin/editar/{{ ep['id'] }}" class="btn-ver">Editar</a>
+                <a href="/admin/eliminar/{{ ep['id'] }}" class="btn-eliminar" onclick="return confirm('¿Eliminar?')">Eliminar</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No hay episodios aún.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

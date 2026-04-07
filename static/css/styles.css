@@ -551,3 +551,157 @@ footer {
     font-size: 0.82rem;
     margin-top: 60px;
 }
+
+/* =====================
+   RESPONSIVE MÓVIL
+   ===================== */
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .nav-logo {
+        font-size: 1.5rem;
+    }
+
+    .nav-links {
+        gap: 16px;
+    }
+
+    .nav-links a {
+        font-size: 0.75rem;
+    }
+
+    .hero {
+        height: auto;
+        padding: 60px 0 40px;
+    }
+
+    .hero-content {
+        padding: 0 20px;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-desc {
+        font-size: 0.9rem;
+    }
+
+    .episodios-section {
+        padding: 40px 16px;
+    }
+
+    .episodios-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .player-page {
+        padding: 16px;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .player-container {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .player-info {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .sidebar {
+        grid-column: 1;
+        grid-row: 3;
+        max-height: 300px;
+    }
+
+    .player-titulo {
+        font-size: 1.5rem;
+    }
+
+    .admin-page {
+        padding: 16px;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .admin-table {
+        font-size: 0.8rem;
+    }
+
+    .admin-table th, .admin-table td {
+        padding: 8px 10px;
+    }
+
+    .form-page {
+        padding: 20px 16px;
+    }
+
+    .login-box {
+        padding: 32px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .episodios-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-title {
+        font-size: 2.8rem;
+    }
+}
+
+/* Título hero más pequeño para nombres largos */
+.hero-title {
+    font-size: clamp(2.5rem, 6vw, 7rem);
+    word-break: break-word;
+}
+
+.hero-title {
+    white-space: nowrap;
+    font-size: clamp(1.5rem, 5vw, 7rem);
+}
+
+.hero {
+    height: auto;
+    min-height: 280px;
+    padding: 60px 0 40px;
+}
+
+.hero-content {
+    max-width: 100% !important;
+    padding: 0 40px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.hero-desc {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.pelicula-preview {
+    aspect-ratio: 16/9;
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+.pelicula-preview iframe {
+    width: 100%;
+    height: 100%;
+}

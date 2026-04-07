@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{{ serie['titulo'] }} | Bacanus{% endblock %}
+{% block content %}
+
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <p class="hero-tag">▶ {{ 'PELÍCULA' if serie['categoria'] == 'pelicula' else 'ANIME' if serie['categoria'] == 'anime' else 'SERIE' }}</p>
+        <h1 class="hero-title">{{ serie['titulo'].upper() }}</h1>
+        {% if serie['descripcion'] %}<p class="hero-desc">{{ serie['descripcion'] }}</p>{% endif %}
+        {% if episodios %}
+        <a href="/episodio/{{ episodios[0]['id'] }}" class="btn-play">▶ {{ 'Ver Película' if serie['categoria'] == 'pelicula' else 'Ver Episodio 1' }}</a>
+        {% endif %}
+    </div>
+</section>
+
+{% if serie['categoria'] == 'pelicula' and episodios %}
+<section class="episodios-section">
+    <div class="pelicula-preview">
+        <iframe src="{{ episodios[0]['url_youtube'] }}" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+</section>
+{% endif %}
+
+{% if serie['categoria'] != 'pelicula' %}
+<section class="episodios-section">
+    <h2 class="section-title">Episodios</h2>
+    <div class="episodios-grid">
+        {% for ep in episodios %}
+        <a href="/episodio/{{ ep['id'] }}" class="ep-card">
+            <div class="ep-thumb">
+                {% if ep['miniatura'] %}<img src="{{ ep['miniatura'] }}" alt="Ep {{ ep['numero'] }}">
+                {% else %}<div class="ep-thumb-placeholder"><span class="ep-num">EP {{ ep['numero'] }}</span></div>{% endif %}
+                <div class="ep-overlay">▶</div>
+                {% if ep['duracion'] %}<span class="ep-duracion">{{ ep['duracion'] }}</span>{% endif %}
+            </div>
+            <div class="ep-info">
+                <span class="ep-numero">Episodio {{ ep['numero'] }}</span>
+                <h3 class="ep-titulo">{{ ep['titulo'] }}</h3>
+                {% if ep['descripcion'] %}<p class="ep-desc">{{ ep['descripcion'] }}</p>{% endif %}
+            </div>
+        </a>
+        {% else %}
+        <p class="no-episodios">Esta serie aún no tiene episodios.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

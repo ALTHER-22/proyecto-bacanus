@@ -1,41 +1,28 @@
 {% extends 'base.html' %}
 {% block title %}Admin | Bacanus{% endblock %}
-
 {% block content %}
 <div class="admin-page">
     <div class="admin-header">
         <h1>Panel de Administración</h1>
-        <a href="/admin/agregar" class="btn-agregar">+ Agregar Episodio</a>
+        <a href="/admin/agregar-serie" class="btn-agregar">+ Nueva Serie</a>
     </div>
-
     <table class="admin-table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Título</th>
-                <th>Duración</th>
-                <th>YouTube</th>
-                <th>MP4</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+        <thead><tr><th>Portada</th><th>Serie</th><th>Descripción</th><th>Acciones</th></tr></thead>
         <tbody>
-            {% for ep in episodios %}
-            <tr>
-                <td>{{ ep['numero'] }}</td>
-                <td>{{ ep['titulo'] }}</td>
-                <td>{{ ep['duracion'] or '-' }}</td>
-                <td>{{ '✅' if ep['url_youtube'] else '❌' }}</td>
-                <td>{{ '✅' if ep['url_mp4'] else '❌' }}</td>
-                <td>
-                    <a href="/episodio/{{ ep['id'] }}" class="btn-ver">Ver</a>
-                    <a href="/admin/editar/{{ ep['id'] }}" class="btn-ver">Editar</a>
-                    <a href="/admin/eliminar/{{ ep['id'] }}" class="btn-eliminar" onclick="return confirm('¿Eliminar episodio?')">Eliminar</a>
-                </td>
-            </tr>
-            {% else %}
-            <tr><td colspan="6">No hay episodios aún.</td></tr>
-            {% endfor %}
+        {% for serie in series %}
+        <tr>
+            <td>{% if serie['miniatura'] %}<img src="{{ serie['miniatura'] }}" style="width:80px;height:50px;object-fit:cover;border-radius:4px;">{% else %}—{% endif %}</td>
+            <td><strong>{{ serie['titulo'] }}</strong></td>
+            <td style="color:var(--text-muted);font-size:0.85rem;">{{ serie['descripcion'][:60] if serie['descripcion'] else '—' }}</td>
+            <td>
+                <a href="/admin/serie/{{ serie['id'] }}/episodios" class="btn-ver">Episodios</a>
+                <a href="/admin/editar-serie/{{ serie['id'] }}" class="btn-ver">Editar</a>
+                <a href="/admin/eliminar-serie/{{ serie['id'] }}" class="btn-eliminar" onclick="return confirm('¿Eliminar serie y todos sus episodios?')">Eliminar</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">No hay series aún. Crea la primera.</td></tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>

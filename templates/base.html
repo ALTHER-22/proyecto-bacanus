@@ -9,22 +9,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-
     <nav class="navbar">
         <a href="/" class="nav-logo">BACANUS</a>
         <div class="nav-links">
             <a href="/">Inicio</a>
+            <a href="/anime">Anime</a>
+            <a href="/peliculas">Películas</a>
+            <a href="/series">Series</a>
+            {% if session.get('admin') %}
             <a href="/admin">Admin</a>
+            <a href="/logout">Cerrar sesión</a>
+            {% endif %}
         </div>
     </nav>
-
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-
-    <footer>
-        <p>© 2026 Bacanus — Todos los derechos reservados</p>
-    </footer>
-
+    <main>{% block content %}{% endblock %}</main>
+    <footer><p>© 2026 Bacanus — Todos los derechos reservados</p></footer>
 </body>
 </html>

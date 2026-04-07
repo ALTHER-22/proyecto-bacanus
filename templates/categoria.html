@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }} | Bacanus{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <p class="hero-tag">▶ BACANUS</p>
+        <h1 class="hero-title">{{ titulo.upper() }}</h1>
+    </div>
+</section>
+<section class="episodios-section">
+    <h2 class="section-title">{{ titulo }}</h2>
+    <div class="episodios-grid">
+        {% for item in items %}
+        <a href="/serie/{{ item['id'] }}" class="ep-card">
+            <div class="ep-thumb">
+                {% if item['miniatura'] %}<img src="{{ item['miniatura'] }}" alt="{{ item['titulo'] }}">
+                {% else %}<div class="ep-thumb-placeholder"><span class="ep-num">{{ item['titulo'][:2].upper() }}</span></div>{% endif %}
+                <div class="ep-overlay">▶</div>
+            </div>
+            <div class="ep-info">
+                <h3 class="ep-titulo">{{ item['titulo'] }}</h3>
+                {% if item['descripcion'] %}<p class="ep-desc">{{ item['descripcion'] }}</p>{% endif %}
+            </div>
+        </a>
+        {% else %}
+        <p class="no-episodios">No hay contenido aún en esta categoría.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
