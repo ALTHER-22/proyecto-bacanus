@@ -3,7 +3,21 @@ import sqlite3, os
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = 'bacanus_clave_secreta_2026'
+# Mejorar seguridad con variables de entorno para la clave secreta
+app.secret_key = os.environ.get('SECRET_KEY', 'bacanus_clave_secreta_2026')
+
+# Configuración segura para la sesión (evita ataques XSS/CSRF básicos)
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+)
+
+@app.after_request
+def add_security_headers(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    return response
 
 ADMIN_USUARIO = 'bacanus'
 ADMIN_PASSWORD = 'tuclave123'
@@ -20,6 +34,11 @@ def init_db():
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS series (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT NOT NULL, descripcion TEXT, miniatura TEXT, orden INTEGER DEFAULT 0, categoria TEXT DEFAULT "serie")''')
     c.execute('''CREATE TABLE IF NOT EXISTS episodios (id INTEGER PRIMARY KEY AUTOINCREMENT, serie_id INTEGER NOT NULL, numero INTEGER NOT NULL, titulo TEXT NOT NULL, descripcion TEXT, url_youtube TEXT, url_mp4 TEXT, miniatura TEXT, duracion TEXT, FOREIGN KEY (serie_id) REFERENCES series(id))''')
+    
+    # Crear índices para mejorar la velocidad y rendimiento de las consultas (performance)
+    c.execute('CREATE INDEX IF NOT EXISTS idx_series_categoria_orden ON series (categoria, orden, id)')
+    c.execute('CREATE INDEX IF NOT EXISTS idx_episodios_serie_numero ON episodios (serie_id, numero)')
+    
     conn.commit()
     conn.close()
 
@@ -35,7 +54,12 @@ def login_requerido(f):
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['usuario'] == ADMIN_USUARIO and request.form['password'] == ADMIN_PASSWORD:
+        import hmac
+        # Mítigación contra ataques de temporización (timing attacks)
+        user_ok = hmac.compare_digest(request.form['usuario'], ADMIN_USUARIO)
+        pass_ok = hmac.compare_digest(request.form['password'], ADMIN_PASSWORD)
+        
+        if user_ok and pass_ok:
             session['admin'] = True
             return redirect('/admin')
         else:
