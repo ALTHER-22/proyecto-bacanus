@@ -16,7 +16,10 @@
             <td>
                 <a href="/episodio/{{ ep['id'] }}" class="btn-ver">Ver</a>
                 <a href="/admin/editar/{{ ep['id'] }}" class="btn-ver">Editar</a>
-                <a href="/admin/eliminar/{{ ep['id'] }}" class="btn-eliminar" onclick="return confirm('¿Eliminar?')">Eliminar</a>
+                <form action="/admin/eliminar/{{ ep['id'] }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Eliminar?')">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
             </td>
         </tr>
         {% else %}
