@@ -7,6 +7,7 @@
         <p class="login-sub">Acceso restringido</p>
         {% if error %}<p class="login-error">{{ error }}</p>{% endif %}
         <form method="POST" class="login-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label>Usuario</label>
                 <input type="text" name="usuario" required autofocus>

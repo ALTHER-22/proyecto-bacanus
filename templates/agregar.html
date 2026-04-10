@@ -5,6 +5,7 @@
 <div class="form-page">
     <h1>Agregar Episodio</h1>
     <form method="POST" class="ep-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
         <div class="form-group">
             <label>Número de episodio</label>

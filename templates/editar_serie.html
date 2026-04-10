@@ -4,6 +4,7 @@
 <div class="form-page">
     <h1>Editar Serie</h1>
     <form method="POST" class="ep-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="form-group">
             <label>Categoría</label>
             <select name="categoria" style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px 16px;color:var(--text);font-family:var(--font-body);font-size:0.95rem;">

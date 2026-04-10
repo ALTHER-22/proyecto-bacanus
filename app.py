@@ -1,10 +1,16 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3, os
 from functools import wraps
+from dotenv import load_dotenv
+from flask_wtf.csrf import CSRFProtect
+from werkzeug.security import generate_password_hash, check_password_hash
+
+load_dotenv()
 
 app = Flask(__name__)
 # Mejorar seguridad con variables de entorno para la clave secreta
 app.secret_key = os.environ.get('SECRET_KEY', 'bacanus_clave_secreta_2026')
+csrf = CSRFProtect(app)
 
 # Configuración segura para la sesión (evita ataques XSS/CSRF básicos)
 app.config.update(
@@ -17,10 +23,8 @@ def add_security_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     response.headers['X-XSS-Protection'] = '1; mode=block'
-    return response
 
-ADMIN_USUARIO = 'bacanus'
-ADMIN_PASSWORD = 'tuclave123'
+# Se elimina ADMIN_USUARIO y ADMIN_PASSWORD codificados directamente en código
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'bacanus.db')
 
@@ -34,7 +38,16 @@ def init_db():
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS series (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT NOT NULL, descripcion TEXT, miniatura TEXT, orden INTEGER DEFAULT 0, categoria TEXT DEFAULT "serie")''')
     c.execute('''CREATE TABLE IF NOT EXISTS episodios (id INTEGER PRIMARY KEY AUTOINCREMENT, serie_id INTEGER NOT NULL, numero INTEGER NOT NULL, titulo TEXT NOT NULL, descripcion TEXT, url_youtube TEXT, url_mp4 TEXT, miniatura TEXT, duracion TEXT, FOREIGN KEY (serie_id) REFERENCES series(id))''')
+    c.execute('''CREATE TABLE IF NOT EXISTS usuarios (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL)''')
     
+    # Crear administrador por defecto si no existen usuarios
+    c.execute("SELECT COUNT(*) FROM usuarios")
+    if c.fetchone()[0] == 0:
+        admin_user = os.environ.get('ADMIN_USUARIO', 'admin')
+        admin_pass = os.environ.get('ADMIN_PASSWORD', 'admin123')
+        admin_hash = generate_password_hash(admin_pass)
+        c.execute("INSERT INTO usuarios (username, password_hash) VALUES (?, ?)", (admin_user, admin_hash))
+
     # Crear índices para mejorar la velocidad y rendimiento de las consultas (performance)
     c.execute('CREATE INDEX IF NOT EXISTS idx_series_categoria_orden ON series (categoria, orden, id)')
     c.execute('CREATE INDEX IF NOT EXISTS idx_episodios_serie_numero ON episodios (serie_id, numero)')
@@ -54,12 +67,13 @@ def login_requerido(f):
 def login():
     error = None
     if request.method == 'POST':
-        import hmac
-        # Mítigación contra ataques de temporización (timing attacks)
-        user_ok = hmac.compare_digest(request.form['usuario'], ADMIN_USUARIO)
-        pass_ok = hmac.compare_digest(request.form['password'], ADMIN_PASSWORD)
+        conn = get_connection()
+        c = conn.cursor()
+        c.execute("SELECT * FROM usuarios WHERE username = ?", (request.form['usuario'],))
+        user = c.fetchone()
+        conn.close()
         
-        if user_ok and pass_ok:
+        if user and check_password_hash(user['password_hash'], request.form['password']):
             session['admin'] = True
             return redirect('/admin')
         else:
@@ -244,5 +258,14 @@ def eliminar_episodio(id):
 
 init_db()
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False') == 'True'
+    app.run(debug=debug_mode)
